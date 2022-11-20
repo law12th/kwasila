@@ -1,0 +1,12 @@
+{
+	"extends": "tsconfig/server.json",
+	"include": ["**/*.ts"],
+	"exclude": [
+		"node_modules",
+		"build",
+		".turbo",
+		"coverage",
+		"dist",
+		"src/**/*.test.ts"
+	]
+}

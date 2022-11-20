@@ -9,3 +9,6 @@ charset = utf-8
 [*.ts]
 trim_trailing_whitespace = true
 insert_final_newline = true
+
+[.yaml]
+indent_style = space

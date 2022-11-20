@@ -6,7 +6,8 @@
 	"scripts": {
 		"lint": "eslint src",
 		"lint:fix": "eslint src --fix",
-		"_": "jest --watchAll --no-cache"
+		"_": "jest --watchAll --no-cache",
+		"test:ci": "jest"
 	},
 	"license": "ISC",
 	"devDependencies": {

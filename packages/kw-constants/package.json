@@ -1,0 +1,16 @@
+{
+	"name": "kw-constants",
+	"version": "1.0.0",
+	"main": "./build/index.js",
+	"types": "./build/index.d.ts",
+	"scripts": {
+		"clean": "del ./build/*",
+		"build": "yarn run clean && tsc"
+	},
+	"devDependencies": {
+		"eslint": "^8.28.0",
+		"typescript": "^4.9.3",
+		"eslint-config-custom": "*",
+		"tsconfig": "*"
+	}
+}
