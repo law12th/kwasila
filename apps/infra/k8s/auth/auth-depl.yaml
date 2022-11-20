@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: auth-depl
+spec:
+   selector:
+      matchLabels:
+         app: auth
+   template:
+      metadata:
+         labels:
+            app: auth
+      spec:
+         containers:
+            - name: auth
+              image: law12th/auth
+              env:
+                 - name: POSTGRES_USER
+                   valueFrom:
+                      configMapKeyRef:
+                         key: POSTGRES_USER
+                         name: auth-postgres-config
+                 - name: POSTGRES_PASSWORD
+                   valueFrom:
+                      configMapKeyRef:
+                         key: POSTGRES_PASSWORD
+                         name: auth-postgres-config
+                 - name: POSTGRES_HOST
+                   valueFrom:
+                      configMapKeyRef:
+                         key: POSTGRES_HOST
+                         name: auth-postgres-config
+                 - name: POSTGRES_DB
+                   valueFrom:
+                      configMapKeyRef:
+                         key: POSTGRES_DB
+                         name: auth-postgres-config
+              resources:
+                 limits:
+                    memory: "128Mi"
+                    cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: auth-srv
+spec:
+   selector:
+      app: auth
+   ports:
+      - name: auth
+        protocol: TCP
+        port: 3000
+        targetPort: 3000

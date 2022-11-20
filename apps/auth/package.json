@@ -19,6 +19,8 @@
 	"license": "ISC",
 	"devDependencies": {
 		"@types/node": "^18.11.9",
+		"@types/pg": "^8.6.5",
+		"dotenv": "^16.0.3",
 		"eslint": "^8.28.0",
 		"eslint-config-custom": "*",
 		"test-config-custom": "*",
@@ -27,6 +29,10 @@
 		"typescript": "^4.9.3"
 	},
 	"dependencies": {
-		"pg": "^8.8.0"
+		"kw-logging": "*",
+		"kw-utils": "*",
+		"kw-constants": "*",
+		"pg": "^8.8.0",
+		"typeorm": "^0.3.10"
 	}
 }

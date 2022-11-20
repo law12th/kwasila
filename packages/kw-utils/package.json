@@ -1,27 +1,19 @@
 {
-	"name": "kw-logging",
+	"name": "kw-utils",
 	"version": "1.0.0",
-	"description": "",
 	"main": "./build/index.js",
 	"types": "./build/index.d.ts",
 	"scripts": {
 		"clean": "del ./build/*",
 		"build": "yarn run clean && tsc"
 	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
 	"devDependencies": {
-		"@types/morgan": "^1.9.3",
 		"eslint": "^8.28.0",
 		"eslint-config-custom": "*",
 		"tsconfig": "*",
 		"typescript": "^4.9.3"
 	},
 	"dependencies": {
-		"morgan": "^1.10.0",
-		"winston": "^3.8.2",
-		"winston-daily-rotate-file": "^4.7.1",
-		"kw-constants": "*"
+		"typeorm": "^0.3.10"
 	}
 }

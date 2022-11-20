@@ -1,5 +1,8 @@
 root = true
 
+[.yaml]
+indent_style = space
+
 [*]
 indent_style = tab
 indent_size = 3
@@ -9,6 +12,3 @@ charset = utf-8
 [*.ts]
 trim_trailing_whitespace = true
 insert_final_newline = true
-
-[.yaml]
-indent_style = space
