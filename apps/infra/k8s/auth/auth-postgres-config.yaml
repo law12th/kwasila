@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+   name: postgres-config
+   labels:
+      app: postgres
+data:
+   POSTGRES_DB: kw_auth_db
+   POSTGRES_USER: postgres
+   POSTGRES_PASSWORD: my_super_secret_password
