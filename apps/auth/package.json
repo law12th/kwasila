@@ -5,14 +5,14 @@
 	"main": "index.js",
 	"scripts": {
 		"lint": "eslint src",
-		"lint:fix": "eslint src --fix"
+		"lint:fix": "eslint src --fix",
+		"_": "jest --watchAll --no-cache"
 	},
-	"keywords": [],
-	"author": "",
 	"license": "ISC",
 	"devDependencies": {
 		"@types/node": "^18.11.9",
 		"eslint": "^8.28.0",
+		"test-config-custom": "*",
 		"tsconfig": "*",
 		"eslint-config-custom": "*",
 		"typescript": "^4.9.3"
