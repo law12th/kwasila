@@ -1,5 +1,5 @@
-import fs from "fs";
+const my_name = "yengwe";
 
-const file = fs.readFileSync("apps");
+console.log(my_name);
 
-console.log(file);
+export default my_name;
