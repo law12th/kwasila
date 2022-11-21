@@ -26,6 +26,9 @@ class Customer extends Base {
 
 	@Column({ name: "password", type: "text" })
 	password = "";
+
+	@Column({ name: "gender", type: "varchar" })
+	gender = "";
 }
 
 export default Customer;
