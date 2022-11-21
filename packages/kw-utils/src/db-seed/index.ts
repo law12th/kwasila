@@ -3,21 +3,21 @@ import * as fs from "fs";
 import { DataSource } from "typeorm";
 
 abstract class DBSeed {
-	abstract getPatchLevel(): number;
-	abstract setPatchLevel(patchLevel: number): void;
-	abstract runPatches(dataSource: DataSource): void;
+	abstract getPatchLevel(): Promise<number>;
+	abstract setPatchLevel(patchLevel: number): Promise<void>;
+	abstract runPatches(dataSource: DataSource): Promise<void>;
 
-	protected runPatch(
+	protected async runPatch(
 		dataSource: DataSource,
 		patchLevel: number,
 		sqlSource: string,
 		isFile: boolean
-	): boolean {
-		if (this.getPatchLevel() < patchLevel) {
+	): Promise<boolean> {
+		if ((await this.getPatchLevel()) < patchLevel) {
 			const sqlText = isFile ? this.getSqlText(sqlSource) : sqlSource;
 
-			this.executeSqlText(dataSource, sqlText);
-			this.setPatchLevel(patchLevel);
+			await this.executeSqlText(dataSource, sqlText);
+			await this.setPatchLevel(patchLevel);
 		}
 
 		return true;

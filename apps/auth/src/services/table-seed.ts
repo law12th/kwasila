@@ -1,12 +1,19 @@
-/* eslint-disable no-magic-numbers */
 /* eslint-disable no-useless-return */
-/* eslint-disable class-methods-use-this */
+import { PatchKeys } from "kw-constants";
 import { DBSeed } from "kw-utils";
-import { DataSource } from "typeorm";
 import path from "path";
+import { LoggerFactory } from "kw-logging";
+import { DataSource } from "typeorm";
+import { Patch } from "../entities";
+
+const logger = LoggerFactory.getLogger();
 
 class TableSeed extends DBSeed {
-	runPatches(dataSource: DataSource): void {
+	private dataSource!: DataSource;
+
+	patchRepository = this.dataSource.getRepository(Patch);
+
+	async runPatches(dataSource: DataSource): Promise<void> {
 		if (
 			!this.runPatch(
 				dataSource,
@@ -27,14 +34,27 @@ class TableSeed extends DBSeed {
 			return;
 	}
 
-	getPatchLevel(): number {
-		throw new Error("Method not implemented.");
+	async getPatchLevel(): Promise<number> {
+		const lookup = await this.patchRepository.findOneBy({
+			key: PatchKeys.TABLE,
+		});
+
+		if (lookup !== null) {
+			return parseInt(lookup.value, 10);
+		}
+
+		return -1;
 	}
 
-	setPatchLevel(patchLevel: number): void {
-		if (patchLevel > 2) {
-			console.log("bigger");
-		}
+	async setPatchLevel(patchLevel: number): Promise<void> {
+		const patch = new Patch();
+
+		patch.key = PatchKeys.TABLE;
+		patch.value = patchLevel.toString(10);
+
+		await this.patchRepository.save(patch);
+
+		logger.info(`Updated ${patch.value} to ${patchLevel}`);
 	}
 }
 

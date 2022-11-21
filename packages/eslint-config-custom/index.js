@@ -54,7 +54,7 @@ module.exports = {
 		"no-self-import": "off",
 		"no-empty": "error",
 		"no-empty-function": "warn",
-		"no-magic-numbers": "warn",
+		"no-magic-numbers": "off",
 		"no-var": "error",
 		"prefer-const": "warn",
 		"no-multi-spaces": "error",
