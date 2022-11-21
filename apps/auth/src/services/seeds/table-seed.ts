@@ -4,7 +4,7 @@ import { DBSeed } from "kw-utils";
 import path from "path";
 import { LoggerFactory } from "kw-logging";
 import { DataSource } from "typeorm";
-import { Patch } from "../entities";
+import { Patch } from "../../entities";
 
 const logger = LoggerFactory.getLogger();
 
@@ -18,7 +18,7 @@ class TableSeed extends DBSeed {
 			!this.runPatch(
 				dataSource,
 				1,
-				path.join(__dirname, "../assets/sql/tables/customer.1.sql"),
+				path.join(__dirname, "../../assets/sql/tables/customer.1.sql"),
 				true
 			)
 		)
@@ -27,7 +27,7 @@ class TableSeed extends DBSeed {
 			!this.runPatch(
 				dataSource,
 				2,
-				path.join(__dirname, "../assets/sql/tables/vendor.1.sql"),
+				path.join(__dirname, "../../assets/sql/tables/vendor.1.sql"),
 				true
 			)
 		)
