@@ -50,6 +50,39 @@ class TableSeed extends DBSeed {
 			)
 		)
 			return;
+		if (
+			!this.runPatch(
+				dataSource,
+				5,
+				path.join(__dirname, "../../assets/sql/tables/patch.1.sql"),
+				true
+			)
+		)
+			return;
+		if (
+			!this.runPatch(
+				dataSource,
+				6,
+				path.join(
+					__dirname,
+					"../../assets/sql/tables/customer_registry.1.sql"
+				),
+				true
+			)
+		)
+			return;
+		if (
+			!this.runPatch(
+				dataSource,
+				7,
+				path.join(
+					__dirname,
+					"../../assets/sql/tables/vendor_registry.1.sql"
+				),
+				true
+			)
+		)
+			return;
 	}
 
 	async getPatchLevel(): Promise<number> {
