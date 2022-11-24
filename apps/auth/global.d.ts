@@ -9,5 +9,9 @@ namespace NodeJS {
 		DB_NAME: string;
 		DB_PASSWORD: string;
 		DB_PORT: number;
+		GOOGLE_CLIENT_iD: string;
+		GOOGLE_CLIENT_SECRET: string;
+		GOOGLE_OAUTH_CALLBACK_URL: string;
+		JWT_SECRET: string;
 	}
 }

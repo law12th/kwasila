@@ -14,6 +14,10 @@ interface ENV {
 	DB_NAME: string | undefined;
 	DB_PASSWORD: string | undefined;
 	DB_PORT: number | undefined;
+	GOOGLE_CLIENT_iD: string | undefined;
+	GOOGLE_CLIENT_SECRET: string | undefined;
+	GOOGLE_OAUTH_CALLBACK_URL: string | undefined;
+	JWT_SECRET: string | undefined;
 }
 
 interface Config {
@@ -24,6 +28,10 @@ interface Config {
 	DB_NAME: string;
 	DB_PASSWORD: string;
 	DB_PORT: number;
+	GOOGLE_CLIENT_iD: string;
+	GOOGLE_CLIENT_SECRET: string;
+	GOOGLE_OAUTH_CALLBACK_URL: string;
+	JWT_SECRET: string;
 }
 
 const getConfig = (): ENV => ({
@@ -34,6 +42,10 @@ const getConfig = (): ENV => ({
 	DB_NAME: process.env.DB_NAME,
 	DB_PASSWORD: process.env.DB_PASSWORD,
 	DB_PORT: process.env.DB_PORT,
+	GOOGLE_CLIENT_iD: process.env.GOOGLE_CLIENT_iD,
+	GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+	GOOGLE_OAUTH_CALLBACK_URL: process.env.GOOGLE_OAUTH_CALLBACK_URL,
+	JWT_SECRET: process.env.JWT_SECRET,
 });
 
 const getSanitizedConfig = (config: ENV): Config => {

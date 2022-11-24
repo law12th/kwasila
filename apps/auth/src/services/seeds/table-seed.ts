@@ -1,8 +1,8 @@
 /* eslint-disable no-useless-return */
 import { PatchKeys } from "kw-constants";
+import { LoggerFactory } from "kw-logging";
 import { DBSeed } from "kw-utils";
 import path from "path";
-import { LoggerFactory } from "kw-logging";
 import { DataSource } from "typeorm";
 import { Patch } from "../../entities";
 
@@ -28,6 +28,24 @@ class TableSeed extends DBSeed {
 				dataSource,
 				2,
 				path.join(__dirname, "../../assets/sql/tables/vendor.1.sql"),
+				true
+			)
+		)
+			return;
+		if (
+			!this.runPatch(
+				dataSource,
+				3,
+				path.join(__dirname, "../../assets/sql/tables/city.1.sql"),
+				true
+			)
+		)
+			return;
+		if (
+			!this.runPatch(
+				dataSource,
+				4,
+				path.join(__dirname, "../../assets/sql/tables/country.1.sql"),
 				true
 			)
 		)

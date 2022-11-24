@@ -1,1 +1,0 @@
-{"version":3,"file":"logger-factory.js","sourceRoot":"","sources":["logger-factory.ts"],"names":[],"mappings":";;;;;AACA,oDAAoC;AACpC,wEAAkD;AAElD;IAAA;IAUA,CAAC;IAPO,uBAAS,GAAhB;QACC,IAAI,CAAC,aAAa,CAAC,MAAM,EAAE;YAC1B,aAAa,CAAC,MAAM,GAAG,IAAA,mBAAY,EAAC,6BAAgB,CAAC,CAAC;SACtD;QAED,OAAO,aAAa,CAAC,MAAM,CAAC;IAC7B,CAAC;IACF,oBAAC;AAAD,CAAC,AAVD,IAUC;AAED,qBAAe,aAAa,CAAC"}

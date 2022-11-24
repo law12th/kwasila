@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS ref.country;
+CREATE SEQUENCE country_seq INCREMENT 50 START WITH 1000;
+CREATE DATABASE ref.country (
+    id INT PRIMARY KEY DEFAULT NEXTVAL('country_seq'),
+    "name" VARCHAR(100) NOT NULL
+);

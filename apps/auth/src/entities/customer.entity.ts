@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import Base from "./base.entity";
 
