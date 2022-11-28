@@ -1,5 +1,5 @@
 import express from "express";
-import CustomerController from "../controllers/customer.controller";
+import { CustomerController } from "../controllers";
 import {
 	loginRules,
 	registrationRules,
@@ -15,5 +15,6 @@ customerRouter
 customerRouter
 	.route("/customer/login")
 	.post(loginRules(), customerController.login);
+customerRouter.route("/customer/logout").post(customerController.logout);
 
 export default customerRouter;

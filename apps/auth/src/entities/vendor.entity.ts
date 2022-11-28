@@ -16,7 +16,7 @@ class Vendor extends Base {
 	phone1!: string;
 
 	@Column({ name: "phone_2", type: "varchar" })
-	phone2!: string;
+	phone2?: string;
 
 	@Column({ name: "password", type: "text" })
 	password = "";

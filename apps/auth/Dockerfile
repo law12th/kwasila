@@ -1,5 +1,8 @@
 FROM node:alpine AS builder
 
+RUN apk add --no-cache libc6-compat
+RUN apk update
+
 WORKDIR /usr/app
 
 RUN yarn global add turbo
@@ -9,6 +12,9 @@ COPY ./ ./
 RUN turbo prune --scope=auth --docker
 
 FROM node:alpine AS installer
+
+RUN apk add --no-cache libc6-compat
+RUN apk update
 
 WORKDIR /usr/app
 
@@ -28,8 +34,9 @@ FROM node:alpine AS runner
 WORKDIR /usr/app
 
 RUN yarn global add pm2
+
 RUN addgroup --system --gid 1001 expressjs
-RUN adduser --system -uid 1001 expressjs
+RUN adduser --system --uid 1001 expressjs
 
 USER expressjs
 
