@@ -2,10 +2,10 @@ import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity({ schema: "sys", name: "patch" })
 class Patch {
-	@PrimaryColumn({ name: "key" })
+	@PrimaryColumn({ name: "key", type: "varchar" })
 	key = "";
 
-	@Column({ name: "value" })
+	@Column({ name: "value", type: "varchar" })
 	value = "";
 }
 

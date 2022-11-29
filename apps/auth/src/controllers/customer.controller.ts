@@ -1,144 +1,147 @@
-/* eslint-disable class-methods-use-this */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Request, Response } from "express";
 import JWT from "jsonwebtoken";
 import { HttpStatusCodes } from "kw-constants";
 import { LoggerFactory } from "kw-logging";
 import { BadRequestError } from "kw-utils";
-import { Repository } from "typeorm";
 import { config } from "../config";
+import dataSource from "../config/db-config";
 import { Customer } from "../entities";
 import { RegistrationCredentials } from "../helpers/credentials/customer.credentials";
 import Password from "../services/password";
 
 const logger = LoggerFactory.getLogger();
-class CustomerController {
-	private customerRepository!: Repository<Customer>;
 
-	async login(req: Request, res: Response): Promise<void> {
-		const { email, password } = req.body;
+const isUsernameTaken = async (username: string): Promise<boolean> => {
+	const customerRepository = dataSource.getRepository(Customer);
 
-		try {
-			if (await this.isValidCustomer(email, password)) {
-				const jwt = this.generateJWTToken({ email });
+	const customer = await customerRepository.findBy({ username });
 
-				req.session = {
-					jwt,
-				};
-
-				res.status(HttpStatusCodes.STATUS200OK).json({ jwt });
-			} else {
-				throw new BadRequestError("invalid credentials");
-			}
-		} catch (err) {
-			logger.error(err);
-		}
+	if (customer) {
+		return true;
 	}
 
-	async register(req: Request, res: Response): Promise<void> {
-		const {
-			givenName,
-			familyName,
-			username,
-			email,
-			phone,
-			dateOfBirth,
-			password,
-		} = req.body;
+	return false;
+};
 
-		try {
-			if (await this.isUsernameTaken(username)) {
-				throw new BadRequestError("username already exists");
-			}
+const isEmailTaken = async (email: string): Promise<boolean> => {
+	const customerRepository = dataSource.getRepository(Customer);
 
-			if (await this.isEmailTaken(email)) {
-				throw new BadRequestError("email already exists");
-			}
+	const customer = await customerRepository.findBy({ email });
 
-			await this.addNewCustomer({
-				givenName,
-				familyName,
-				username,
-				email,
-				phone,
-				dateOfBirth,
-				password,
-			});
+	if (customer) {
+		return true;
+	}
 
-			const jwt = this.generateJWTToken({ email });
+	return false;
+};
+
+const isValidCustomer = async (
+	email: string,
+	password: string
+): Promise<boolean> => {
+	const customerRepository = dataSource.getRepository(Customer);
+
+	const customer = await customerRepository.findOneBy({ email });
+
+	if (!customer) {
+		return false;
+	}
+
+	const passwordsMatch = Password.compare(customer.password, password);
+
+	if (!passwordsMatch) {
+		return false;
+	}
+
+	return true;
+};
+
+const generateJWTToken = (options: object): string => {
+	const jwt = JWT.sign({ ...options }, config.JWT_SECRET);
+
+	return jwt;
+};
+
+const addNewCustomer = async (options: RegistrationCredentials) => {
+	const customerRepository = dataSource.getRepository(Customer);
+
+	const newCustomer = new Customer();
+
+	newCustomer.givenName = options.givenName;
+	newCustomer.familyName = options.familyName;
+	newCustomer.username = options.username;
+	newCustomer.password = options.password;
+	newCustomer.phone = options.phone;
+	newCustomer.email = options.email;
+
+	await customerRepository.save(newCustomer);
+};
+
+export const login = async (req: Request, res: Response): Promise<void> => {
+	const { email, password } = req.body;
+
+	try {
+		if (await isValidCustomer(email, password)) {
+			const jwt = generateJWTToken({ email });
 
 			req.session = {
 				jwt,
 			};
 
-			res.status(HttpStatusCodes.STATUS200OK).send("account created");
-		} catch (err) {
-			logger.error(err);
+			res.status(HttpStatusCodes.STATUS200OK).json({ jwt });
+		} else {
+			throw new BadRequestError("invalid credentials");
 		}
+	} catch (err) {
+		logger.error(err);
 	}
+};
 
-	logout(req: Request, res: Response): void {
-		req.session = null;
+export const register = async (req: Request, res: Response): Promise<void> => {
+	const {
+		given_name,
+		family_name,
+		username,
+		email,
+		phone,
+		date_of_birth,
+		password,
+	} = req.body;
 
-		res.send({});
-	}
-
-	private async isUsernameTaken(username: string): Promise<boolean> {
-		const customer = await this.customerRepository.findBy({ username });
-
-		if (customer) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private async isEmailTaken(email: string): Promise<boolean> {
-		const customer = await this.customerRepository.findBy({ email });
-
-		if (customer) {
-			return true;
+	try {
+		if (await isUsernameTaken(username)) {
+			throw new BadRequestError("username already exists");
 		}
 
-		return false;
-	}
-
-	private async isValidCustomer(
-		email: string,
-		password: string
-	): Promise<boolean> {
-		const customer = await this.customerRepository.findOneBy({ email });
-
-		if (!customer) {
-			return false;
+		if (await isEmailTaken(email)) {
+			throw new BadRequestError("email already exists");
 		}
 
-		const passwordsMatch = Password.compare(customer.password, password);
+		await addNewCustomer({
+			givenName: given_name,
+			familyName: family_name,
+			username,
+			email,
+			phone,
+			dateOfBirth: date_of_birth,
+			password,
+		});
 
-		if (!passwordsMatch) {
-			return false;
-		}
+		const jwt = generateJWTToken({ email });
 
-		return true;
+		req.session = {
+			jwt,
+		};
+
+		res.status(HttpStatusCodes.STATUS200OK).send("account created");
+	} catch (err) {
+		logger.error(err);
 	}
+};
 
-	private generateJWTToken(options: object) {
-		const jwt = JWT.sign({ ...options }, config.JWT_SECRET);
+export const logout = (req: Request, res: Response): void => {
+	req.session = null;
 
-		return jwt;
-	}
-
-	private async addNewCustomer(options: RegistrationCredentials) {
-		const newCustomer = new Customer();
-
-		newCustomer.givenName = options.givenName;
-		newCustomer.familyName = options.familyName;
-		newCustomer.username = options.username;
-		newCustomer.password = options.password;
-		newCustomer.phone = options.phone;
-		newCustomer.email = options.email;
-
-		await this.customerRepository.save(newCustomer);
-	}
-}
-
-export default CustomerController;
+	res.send({});
+};

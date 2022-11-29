@@ -4,28 +4,27 @@ import { LoggerFactory } from "kw-logging";
 import { DBSeed } from "kw-utils";
 import path from "path";
 import { DataSource } from "typeorm";
+import dataSource from "../../config/db-config";
 import { Patch } from "../../entities";
 
 const logger = LoggerFactory.getLogger();
 
 class TableSeed extends DBSeed {
-	private dataSource!: DataSource;
+	patchRepository = dataSource.getRepository(Patch);
 
-	patchRepository = this.dataSource.getRepository(Patch);
-
-	async runPatches(dataSource: DataSource): Promise<void> {
+	async runPatches(connection: DataSource): Promise<void> {
 		if (
 			!this.runPatch(
-				dataSource,
+				connection,
 				1,
-				path.join(__dirname, "../../assets/sql/tables/customer.1.sql"),
+				path.join(__dirname, "../../assets/sql/tables/patch.1.sql"),
 				true
 			)
 		)
 			return;
 		if (
 			!this.runPatch(
-				dataSource,
+				connection,
 				2,
 				path.join(__dirname, "../../assets/sql/tables/vendor.1.sql"),
 				true
@@ -34,7 +33,7 @@ class TableSeed extends DBSeed {
 			return;
 		if (
 			!this.runPatch(
-				dataSource,
+				connection,
 				3,
 				path.join(__dirname, "../../assets/sql/tables/city.1.sql"),
 				true
@@ -43,7 +42,7 @@ class TableSeed extends DBSeed {
 			return;
 		if (
 			!this.runPatch(
-				dataSource,
+				connection,
 				4,
 				path.join(__dirname, "../../assets/sql/tables/country.1.sql"),
 				true
@@ -52,16 +51,16 @@ class TableSeed extends DBSeed {
 			return;
 		if (
 			!this.runPatch(
-				dataSource,
+				connection,
 				5,
-				path.join(__dirname, "../../assets/sql/tables/patch.1.sql"),
+				path.join(__dirname, "../../assets/sql/tables/customer.1.sql"),
 				true
 			)
 		)
 			return;
 		if (
 			!this.runPatch(
-				dataSource,
+				connection,
 				6,
 				path.join(
 					__dirname,
@@ -73,7 +72,7 @@ class TableSeed extends DBSeed {
 			return;
 		if (
 			!this.runPatch(
-				dataSource,
+				connection,
 				7,
 				path.join(
 					__dirname,

@@ -1,5 +1,5 @@
 import express from "express";
-import { CustomerController } from "../controllers";
+import { login, logout, register } from "../controllers/customer.controller";
 import {
 	loginRules,
 	registrationRules,
@@ -7,14 +7,10 @@ import {
 
 const customerRouter = express.Router();
 
-const customerController = new CustomerController();
-
 customerRouter
 	.route("/customer/registration")
-	.post(registrationRules(), customerController.register);
-customerRouter
-	.route("/customer/login")
-	.post(loginRules(), customerController.login);
-customerRouter.route("/customer/logout").post(customerController.logout);
+	.post(registrationRules(), register);
+customerRouter.route("/customer/login").post(loginRules(), login);
+customerRouter.route("/customer/logout").post(logout);
 
 export default customerRouter;

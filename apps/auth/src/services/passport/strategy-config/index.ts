@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ExtractJwt } from "passport-jwt";
 import { config } from "../../../config";
 import { Strategy } from "../strategies";
@@ -17,17 +16,6 @@ const strategyConfig: Strategy[] = [
 			}
 			return done(null, jwtPayload);
 		},
-	},
-	{
-		type: StrategyTypes.GOOGLE_OAUTH2,
-		options: {
-			clientID: config.GOOGLE_CLIENT_iD,
-			clientSecret: config.GOOGLE_CLIENT_SECRET,
-			callbackURL: config.GOOGLE_OAUTH_CALLBACK_URL,
-		},
-		// @ts-ignore
-		verify: (_accessToken, _refreshToken, profile, done) =>
-			done(undefined, profile),
 	},
 ];
 

@@ -4,19 +4,18 @@ import { LoggerFactory } from "kw-logging";
 import { DBSeed } from "kw-utils";
 import path from "path";
 import { DataSource } from "typeorm";
+import dataSource from "../../config/db-config";
 import { Patch } from "../../entities";
 
 const logger = LoggerFactory.getLogger();
 
 class FunctionSeed extends DBSeed {
-	private dataSource!: DataSource;
+	patchRepository = dataSource.getRepository(Patch);
 
-	patchRepository = this.dataSource.getRepository(Patch);
-
-	async runPatches(dataSource: DataSource): Promise<void> {
+	async runPatches(connection: DataSource): Promise<void> {
 		if (
 			!this.runPatch(
-				dataSource,
+				connection,
 				1,
 				path.join(
 					__dirname,

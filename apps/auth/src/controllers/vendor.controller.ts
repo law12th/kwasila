@@ -5,137 +5,141 @@ import JWT from "jsonwebtoken";
 import { HttpStatusCodes } from "kw-constants";
 import { LoggerFactory } from "kw-logging";
 import { BadRequestError } from "kw-utils";
-import { Repository } from "typeorm";
 import { config } from "../config";
+import dataSource from "../config/db-config";
 import { Vendor } from "../entities";
 import { RegistrationCredentials } from "../helpers/credentials/vendor.credentials";
 import Password from "../services/password";
 
 const logger = LoggerFactory.getLogger();
-class VendorController {
-	private vendorRepository!: Repository<Vendor>;
 
-	async login(req: Request, res: Response): Promise<void> {
-		const { vendor_name, email, password } = req.body;
+const isValidVendor = async (
+	vendorName: string,
+	email: string,
+	password: string
+): Promise<boolean> => {
+	const vendorRepository = dataSource.getRepository(Vendor);
 
-		try {
-			if (await this.isValidVendor(vendor_name, email, password)) {
-				const jwt = this.generateJWTToken({ email });
+	const vendor = await vendorRepository.findOneBy({
+		vendorName,
+		email,
+	});
 
-				req.session = {
-					jwt,
-				};
-
-				res.status(HttpStatusCodes.STATUS200OK).json({ jwt });
-			} else {
-				throw new BadRequestError("invalid credentials");
-			}
-		} catch (err) {
-			logger.error(err);
-		}
+	if (!vendor) {
+		return false;
 	}
 
-	async register(req: Request, res: Response): Promise<void> {
-		const { vendor_name, email, address, phone_1, phone_2, password } =
-			req.body;
+	const passwordsMatch = Password.compare(vendor.password, password);
 
-		try {
-			if (await this.isVendorNameTaken(vendor_name)) {
-				throw new BadRequestError("vendor name already exists");
-			}
+	if (!passwordsMatch) {
+		return false;
+	}
 
-			if (await this.isEmailTaken(email)) {
-				throw new BadRequestError("email already exists");
-			}
+	return true;
+};
 
-			this.addNewVendor({
-				vendor_name,
-				email,
-				address,
-				phone_1,
-				phone_2,
-				password,
-			});
+const generateJWTToken = (options: object): string => {
+	const jwt = JWT.sign({ ...options }, config.JWT_SECRET);
 
-			const jwt = this.generateJWTToken({ email });
+	return jwt;
+};
+
+const isEmailTaken = async (email: string): Promise<boolean> => {
+	const vendorRepository = dataSource.getRepository(Vendor);
+
+	const vendor = await vendorRepository.findOneBy({ email });
+
+	if (vendor) {
+		return true;
+	}
+
+	return false;
+};
+
+const isVendorNameTaken = async (vendorName: string): Promise<boolean> => {
+	const vendorRepository = dataSource.getRepository(Vendor);
+
+	const vendor = await vendorRepository.findOneBy({ vendorName });
+
+	if (vendor) {
+		return true;
+	}
+
+	return false;
+};
+
+const addNewVendor = async (
+	options: RegistrationCredentials
+): Promise<void> => {
+	const vendorRepository = dataSource.getRepository(Vendor);
+
+	const vendor = new Vendor();
+
+	vendor.address = options.address;
+	vendor.email = options.email;
+	vendor.password = options.password;
+	vendor.phone1 = options.phone_1;
+	vendor.phone2 = options.phone_2;
+	vendor.vendorName = options.vendor_name;
+
+	vendorRepository.save(vendor);
+};
+
+export const login = async (req: Request, res: Response): Promise<void> => {
+	const { vendor_name, email, password } = req.body;
+
+	try {
+		if (await isValidVendor(vendor_name, email, password)) {
+			const jwt = generateJWTToken({ email });
 
 			req.session = {
 				jwt,
 			};
 
-			res.status(HttpStatusCodes.STATUS200OK).send("account created");
-		} catch (err) {
-			logger.error(err);
+			res.status(HttpStatusCodes.STATUS200OK).json({ jwt });
+		} else {
+			throw new BadRequestError("invalid credentials");
 		}
+	} catch (err) {
+		logger.error(err);
 	}
+};
 
-	logout(req: Request, res: Response): void {
-		req.session = null;
+export const register = async (req: Request, res: Response): Promise<void> => {
+	const { vendor_name, email, address, phone_1, phone_2, password } = req.body;
 
-		res.send({});
-	}
+	try {
+		if (await isVendorNameTaken(vendor_name)) {
+			throw new BadRequestError("vendor name already exists");
+		}
 
-	private async isValidVendor(
-		vendorName: string,
-		email: string,
-		password: string
-	): Promise<boolean> {
-		const vendor = await this.vendorRepository.findOneBy({
-			vendorName,
+		if (await isEmailTaken(email)) {
+			throw new BadRequestError("email already exists");
+		}
+
+		addNewVendor({
+			vendor_name,
 			email,
+			address,
+			phone_1,
+			phone_2,
+			password,
 		});
 
-		if (!vendor) {
-			return false;
-		}
+		const jwt = generateJWTToken({ email });
 
-		const passwordsMatch = Password.compare(vendor.password, password);
+		req.session = {
+			jwt,
+		};
 
-		if (!passwordsMatch) {
-			return false;
-		}
-
-		return true;
+		res.status(HttpStatusCodes.STATUS200OK).send("account created");
+	} catch (err) {
+		logger.error(err);
 	}
+};
 
-	private generateJWTToken(options: object) {
-		const jwt = JWT.sign({ ...options }, config.JWT_SECRET);
+export const logout = (req: Request, res: Response): void => {
+	req.session = null;
 
-		return jwt;
-	}
-
-	private async isVendorNameTaken(vendorName: string): Promise<boolean> {
-		const vendor = await this.vendorRepository.findOneBy({ vendorName });
-
-		if (vendor) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private async isEmailTaken(email: string): Promise<boolean> {
-		const vendor = await this.vendorRepository.findOneBy({ email });
-
-		if (vendor) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private async addNewVendor(options: RegistrationCredentials): Promise<void> {
-		const vendor = new Vendor();
-
-		vendor.address = options.address;
-		vendor.email = options.email;
-		vendor.password = options.password;
-		vendor.phone1 = options.phone_1;
-		vendor.phone2 = options.phone_2;
-		vendor.vendorName = options.vendor_name;
-
-		this.vendorRepository.save(vendor);
-	}
-}
-
-export default VendorController;
+	res.send({});
+};

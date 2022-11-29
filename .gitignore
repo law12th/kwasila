@@ -19,6 +19,7 @@ build
 logs
 *.log
 .vscode
+.logs
 
 # debug
 npm-debug.log*

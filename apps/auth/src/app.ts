@@ -9,8 +9,14 @@ import { errorHandler, NotFoundError } from "kw-utils";
 import passport from "passport";
 import { customerRouter, vendorRouter } from "./routes";
 import { Passport } from "./services";
+import dataSource from "./config/db-config";
+import { FunctionSeed, TableSeed, TriggerSeed } from "./services/seeds";
 
 const app = express();
+
+const functionSeed = new FunctionSeed();
+const tableSeed = new TableSeed();
+const triggerSeed = new TriggerSeed();
 
 app.set("trust proxy", true);
 app.use(express.json());
@@ -30,6 +36,12 @@ app.use(cors());
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.on("db_init", async () => {
+	await functionSeed.runPatches(dataSource);
+	await tableSeed.runPatches(dataSource);
+	await triggerSeed.runPatches(dataSource);
+});
 
 app.use("/api", customerRouter);
 app.use("/api", vendorRouter);
