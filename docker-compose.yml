@@ -2,7 +2,7 @@ version: "3"
 
 services:
   auth:
-    container_name: auth
+    image: law12th/auth
     build:
       context: .
       dockerfile: ./apps/auth/Dockerfile
