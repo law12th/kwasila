@@ -8,7 +8,7 @@ import { config } from "../config";
 import dataSource from "../config/db-config";
 import { Customer } from "../entities";
 import { RegistrationCredentials } from "../helpers/credentials/customer.credentials";
-import Password from "../services/password";
+import { Password } from "../services";
 
 const logger = LoggerFactory.getLogger();
 
@@ -104,6 +104,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 		family_name,
 		username,
 		email,
+		gender,
 		phone,
 		date_of_birth,
 		password,
@@ -119,6 +120,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 		}
 
 		await addNewCustomer({
+			gender,
 			givenName: given_name,
 			familyName: family_name,
 			username,

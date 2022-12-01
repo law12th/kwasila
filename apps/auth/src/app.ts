@@ -9,14 +9,8 @@ import { errorHandler, NotFoundError } from "kw-utils";
 import passport from "passport";
 import { customerRouter, vendorRouter } from "./routes";
 import { Passport } from "./services";
-// import dataSource from "./config/db-config";
-// import { FunctionSeed, TableSeed, TriggerSeed } from "./services/seeds";
 
 const app = express();
-
-// const functionSeed = new FunctionSeed();
-// const tableSeed = new TableSeed();
-// const triggerSeed = new TriggerSeed();
 
 app.set("trust proxy", true);
 app.use(express.json());

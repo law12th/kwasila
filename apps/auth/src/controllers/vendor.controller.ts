@@ -9,7 +9,7 @@ import { config } from "../config";
 import dataSource from "../config/db-config";
 import { Vendor } from "../entities";
 import { RegistrationCredentials } from "../helpers/credentials/vendor.credentials";
-import Password from "../services/password";
+import { Password } from "../services";
 
 const logger = LoggerFactory.getLogger();
 
