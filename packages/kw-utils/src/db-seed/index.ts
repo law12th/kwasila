@@ -14,7 +14,7 @@ abstract class DBSeed {
 		isFile: boolean
 	): Promise<boolean> {
 		if ((await this.getPatchLevel()) < patchLevel) {
-			const sqlText = isFile ? await this.getSqlText(sqlSource) : sqlSource;
+			const sqlText = isFile ? this.getSqlText(sqlSource) : sqlSource;
 
 			await this.executeSqlText(dataSource, sqlText);
 			await this.setPatchLevel(patchLevel);
@@ -23,8 +23,8 @@ abstract class DBSeed {
 		return true;
 	}
 
-	private async getSqlText(file: string) {
-		const sqlText = await fs.promises.readFile(file, { encoding: "utf-8" });
+	private getSqlText(file: string) {
+		const sqlText = fs.readFileSync(file, { encoding: "utf-8" });
 
 		return sqlText;
 	}
