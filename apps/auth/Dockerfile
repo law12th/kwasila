@@ -42,4 +42,4 @@ USER expressjs
 
 COPY --from=installer /usr/app .
 
-CMD pm2-runtime /auth/build/index.js
+CMD ["yarn", "workspace", "auth", "run", "start:prod"]

@@ -42,4 +42,4 @@ USER expressjs
 
 COPY --from=installer /usr/app .
 
-CMD ["yarn", "workspace", "auth", "run", "start:prod"]
+CMD ["yarn", "workspace", "auth", "run", "start:dev"]
