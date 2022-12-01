@@ -15,7 +15,7 @@ const logger = LoggerFactory.getLogger();
 const isUsernameTaken = async (username: string): Promise<boolean> => {
 	const customerRepository = dataSource.getRepository(Customer);
 
-	const customer = await customerRepository.findBy({ username });
+	const customer = await customerRepository.findOneBy({ username });
 
 	if (customer) {
 		return true;
@@ -27,7 +27,7 @@ const isUsernameTaken = async (username: string): Promise<boolean> => {
 const isEmailTaken = async (email: string): Promise<boolean> => {
 	const customerRepository = dataSource.getRepository(Customer);
 
-	const customer = await customerRepository.findBy({ email });
+	const customer = await customerRepository.findOneBy({ email });
 
 	if (customer) {
 		return true;

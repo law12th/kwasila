@@ -13,6 +13,30 @@ import Password from "../services/password";
 
 const logger = LoggerFactory.getLogger();
 
+const isEmailTaken = async (email: string): Promise<boolean> => {
+	const vendorRepository = dataSource.getRepository(Vendor);
+
+	const vendor = await vendorRepository.findOneBy({ email });
+
+	if (vendor) {
+		return true;
+	}
+
+	return false;
+};
+
+const isVendorNameTaken = async (vendorName: string): Promise<boolean> => {
+	const vendorRepository = dataSource.getRepository(Vendor);
+
+	const vendor = await vendorRepository.findOneBy({ vendorName });
+
+	if (vendor) {
+		return true;
+	}
+
+	return false;
+};
+
 const isValidVendor = async (
 	vendorName: string,
 	email: string,
@@ -42,30 +66,6 @@ const generateJWTToken = (options: object): string => {
 	const jwt = JWT.sign({ ...options }, config.JWT_SECRET);
 
 	return jwt;
-};
-
-const isEmailTaken = async (email: string): Promise<boolean> => {
-	const vendorRepository = dataSource.getRepository(Vendor);
-
-	const vendor = await vendorRepository.findOneBy({ email });
-
-	if (vendor) {
-		return true;
-	}
-
-	return false;
-};
-
-const isVendorNameTaken = async (vendorName: string): Promise<boolean> => {
-	const vendorRepository = dataSource.getRepository(Vendor);
-
-	const vendor = await vendorRepository.findOneBy({ vendorName });
-
-	if (vendor) {
-		return true;
-	}
-
-	return false;
 };
 
 const addNewVendor = async (
@@ -117,7 +117,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 			throw new BadRequestError("email already exists");
 		}
 
-		addNewVendor({
+		await addNewVendor({
 			vendor_name,
 			email,
 			address,

@@ -8,6 +8,7 @@
 		"clean": "del ./build/*",
 		"build": "yarn run clean && tsc",
 		"start:dev": "pm2-dev ./build/index.js",
+		"start:prod": "pm2-runtime ./build/index.js",
 		"lint": "eslint src",
 		"lint:fix": "eslint src --fix",
 		"postbuild": "cp -r ./src/assets ./build/",

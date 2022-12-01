@@ -37,9 +37,10 @@ RUN yarn global add pm2
 
 RUN addgroup --system --gid 1001 expressjs
 RUN adduser --system --uid 1001 expressjs
+RUN yarn build
 
 USER expressjs
 
 COPY --from=installer /usr/app .
 
-CMD pm2-runtime usr/apps/auth/build/index.js
+CMD ["yarn", "run", "start"]

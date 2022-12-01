@@ -8,6 +8,7 @@ export interface RegistrationCredentials {
 	familyName: string;
 	username: string;
 	email: string;
+	gender: string;
 	phone: string;
 	dateOfBirth: Date;
 	password: string;

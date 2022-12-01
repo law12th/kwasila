@@ -10,6 +10,6 @@ CREATE TABLE users.customer (
 	username VARCHAR(100) NOT NULL UNIQUE,
 	gender VARCHAR(20),
 	date_of_birth DATE,
-	created_at DATE NOT NULL DEFAULT NOW(),
-	updated_at DATE NOT NULL DEFAULT NOW()
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );

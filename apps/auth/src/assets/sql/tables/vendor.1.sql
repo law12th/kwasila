@@ -8,6 +8,6 @@ CREATE TABLE users.vendor (
 	"address" VARCHAR(255) NOT NULL,
 	phone_1 VARCHAR(20),
 	phone_2 VARCHAR(20),
-	created_at DATE NOT NULL DEFAULT NOW(),
-	updated_at DATE NOT NULL DEFAULT NOW()
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );

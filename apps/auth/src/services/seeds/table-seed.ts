@@ -47,6 +47,15 @@ class TableSeed extends DBSeed {
 			!this.runPatch(
 				this.dataSource,
 				4,
+				path.join(__dirname, "../../assets/sql/tables/vendor.1.sql"),
+				true
+			)
+		)
+			return;
+		if (
+			!this.runPatch(
+				this.dataSource,
+				5,
 				path.join(
 					__dirname,
 					"../../assets/sql/tables/customer_registry.1.sql"
@@ -58,7 +67,7 @@ class TableSeed extends DBSeed {
 		if (
 			!this.runPatch(
 				this.dataSource,
-				5,
+				6,
 				path.join(
 					__dirname,
 					"../../assets/sql/tables/vendor_registry.1.sql"
