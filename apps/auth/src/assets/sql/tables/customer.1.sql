@@ -1,3 +1,4 @@
+CREATE SCHEMA IF NOT EXISTS users;
 DROP TABLE IF EXISTS users.customer;
 CREATE TABLE users.customer (
 	id BIGSERIAL PRIMARY KEY,

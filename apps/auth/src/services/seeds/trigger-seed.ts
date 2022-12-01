@@ -4,18 +4,21 @@ import { LoggerFactory } from "kw-logging";
 import { DBSeed } from "kw-utils";
 import path from "path";
 import { DataSource } from "typeorm";
-import dataSource from "../../config/db-config";
 import { Patch } from "../../entities";
 
 const logger = LoggerFactory.getLogger();
 
 class TriggerSeed extends DBSeed {
-	patchRepository = dataSource.getRepository(Patch);
+	constructor(public dataSource: DataSource) {
+		super();
+	}
 
-	async runPatches(connection: DataSource): Promise<void> {
+	patchRepository = this.dataSource.getRepository(Patch);
+
+	async runPatches(): Promise<void> {
 		if (
 			!this.runPatch(
-				connection,
+				this.dataSource,
 				1,
 				path.join(
 					__dirname,
@@ -47,7 +50,7 @@ class TriggerSeed extends DBSeed {
 
 		await this.patchRepository.save(patch);
 
-		logger.info(`Updated ${patch.value} to ${patchLevel}`);
+		logger.info(`Updated ${PatchKeys.TRIGGER} to ${patchLevel}`);
 	}
 }
 

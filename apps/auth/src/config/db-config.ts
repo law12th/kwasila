@@ -1,13 +1,11 @@
-import "reflect-metadata";
-import express from "express";
 import { LoggerFactory } from "kw-logging";
+import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { Customer, Patch, Vendor } from "../entities";
+import runSeeds from "../services/seeds";
 import config from "./env-config";
 
 const logger = LoggerFactory.getLogger();
-
-const app = express();
 
 const dataSource = new DataSource({
 	type: "postgres",
@@ -19,14 +17,13 @@ const dataSource = new DataSource({
 	entities: [Customer, Vendor, Patch],
 });
 
-dataSource
-	.initialize()
-	.then(() => {
-		logger.info("database connection successfully established");
-		app.emit("db_init");
-	})
-	.catch((err) => {
+(async () => {
+	try {
+		await dataSource.initialize();
+		await runSeeds(dataSource);
+	} catch (err) {
 		logger.error(`database connection failed: ${err}`);
-	});
+	}
+})();
 
 export default dataSource;

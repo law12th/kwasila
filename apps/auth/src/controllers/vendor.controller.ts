@@ -29,7 +29,7 @@ const isValidVendor = async (
 		return false;
 	}
 
-	const passwordsMatch = Password.compare(vendor.password, password);
+	const passwordsMatch = await Password.compare(vendor.password, password);
 
 	if (!passwordsMatch) {
 		return false;
@@ -77,12 +77,12 @@ const addNewVendor = async (
 
 	vendor.address = options.address;
 	vendor.email = options.email;
-	vendor.password = options.password;
+	vendor.password = await Password.toHash(options.password);
 	vendor.phone1 = options.phone_1;
 	vendor.phone2 = options.phone_2;
 	vendor.vendorName = options.vendor_name;
 
-	vendorRepository.save(vendor);
+	await vendorRepository.save(vendor);
 };
 
 export const login = async (req: Request, res: Response): Promise<void> => {

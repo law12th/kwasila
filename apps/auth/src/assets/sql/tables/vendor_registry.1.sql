@@ -3,5 +3,5 @@ CREATE TABLE "login".vendor_registry (
     uuid UUID PRIMARY KEY,
     email TEXT NOT NULL,
     active BOOLEAN DEFAULT FALSE,
-    last_login_datetime DATETIME,
-)
+    last_login_datetime TIMESTAMP
+);

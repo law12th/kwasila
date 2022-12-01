@@ -48,7 +48,7 @@ const isValidCustomer = async (
 		return false;
 	}
 
-	const passwordsMatch = Password.compare(customer.password, password);
+	const passwordsMatch = await Password.compare(customer.password, password);
 
 	if (!passwordsMatch) {
 		return false;
@@ -71,7 +71,7 @@ const addNewCustomer = async (options: RegistrationCredentials) => {
 	newCustomer.givenName = options.givenName;
 	newCustomer.familyName = options.familyName;
 	newCustomer.username = options.username;
-	newCustomer.password = options.password;
+	newCustomer.password = await Password.toHash(options.password);
 	newCustomer.phone = options.phone;
 	newCustomer.email = options.email;
 

@@ -1,3 +1,11 @@
-export { default as FunctionSeed } from "./function-seed";
-export { default as TableSeed } from "./table-seed";
-export { default as TriggerSeed } from "./trigger-seed";
+import { DataSource } from "typeorm";
+import FunctionSeed from "./function-seed";
+import TableSeed from "./table-seed";
+
+const runSeeds = async (dataSource: DataSource) => {
+	await new TableSeed(dataSource).runPatches();
+	await new FunctionSeed(dataSource).runPatches();
+	// await new TriggerSeed(dataSource).runPatches();
+};
+
+export default runSeeds;

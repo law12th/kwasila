@@ -4,46 +4,22 @@ import { LoggerFactory } from "kw-logging";
 import { DBSeed } from "kw-utils";
 import path from "path";
 import { DataSource } from "typeorm";
-import dataSource from "../../config/db-config";
 import { Patch } from "../../entities";
 
 const logger = LoggerFactory.getLogger();
 
 class TableSeed extends DBSeed {
-	patchRepository = dataSource.getRepository(Patch);
+	constructor(public dataSource: DataSource) {
+		super();
+	}
 
-	async runPatches(connection: DataSource): Promise<void> {
+	patchRepository = this.dataSource.getRepository(Patch);
+
+	async runPatches(): Promise<void> {
 		if (
 			!this.runPatch(
-				connection,
+				this.dataSource,
 				1,
-				path.join(__dirname, "../../assets/sql/tables/patch.1.sql"),
-				true
-			)
-		)
-			return;
-		if (
-			!this.runPatch(
-				connection,
-				2,
-				path.join(__dirname, "../../assets/sql/tables/vendor.1.sql"),
-				true
-			)
-		)
-			return;
-		if (
-			!this.runPatch(
-				connection,
-				3,
-				path.join(__dirname, "../../assets/sql/tables/city.1.sql"),
-				true
-			)
-		)
-			return;
-		if (
-			!this.runPatch(
-				connection,
-				4,
 				path.join(__dirname, "../../assets/sql/tables/country.1.sql"),
 				true
 			)
@@ -51,8 +27,17 @@ class TableSeed extends DBSeed {
 			return;
 		if (
 			!this.runPatch(
-				connection,
-				5,
+				this.dataSource,
+				2,
+				path.join(__dirname, "../../assets/sql/tables/city.1.sql"),
+				true
+			)
+		)
+			return;
+		if (
+			!this.runPatch(
+				this.dataSource,
+				3,
 				path.join(__dirname, "../../assets/sql/tables/customer.1.sql"),
 				true
 			)
@@ -60,8 +45,8 @@ class TableSeed extends DBSeed {
 			return;
 		if (
 			!this.runPatch(
-				connection,
-				6,
+				this.dataSource,
+				4,
 				path.join(
 					__dirname,
 					"../../assets/sql/tables/customer_registry.1.sql"
@@ -72,8 +57,8 @@ class TableSeed extends DBSeed {
 			return;
 		if (
 			!this.runPatch(
-				connection,
-				7,
+				this.dataSource,
+				5,
 				path.join(
 					__dirname,
 					"../../assets/sql/tables/vendor_registry.1.sql"
@@ -104,7 +89,7 @@ class TableSeed extends DBSeed {
 
 		await this.patchRepository.save(patch);
 
-		logger.info(`Updated ${patch.value} to ${patchLevel}`);
+		logger.info(`Updated ${PatchKeys.TABLE} to ${patchLevel}`);
 	}
 }
 

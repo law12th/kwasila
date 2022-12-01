@@ -7,12 +7,10 @@
 	"scripts": {
 		"clean": "del ./build/*",
 		"build": "yarn run clean && tsc",
-		"dev": "ts-node-dev src/index.ts",
-		"start": "ts-node src/index.ts",
-		"start:prod": "pm2-runtime ./build/index.js",
 		"start:dev": "pm2-dev ./build/index.js",
 		"lint": "eslint src",
 		"lint:fix": "eslint src --fix",
+		"postbuild": "cp -r ./src/assets ./build/",
 		"test": "jest --watchAll --no-cache",
 		"test:ci": "jest"
 	},
