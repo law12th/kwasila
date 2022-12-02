@@ -1,6 +1,10 @@
+/* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
 import * as fs from "fs";
 import { DataSource } from "typeorm";
+import { LoggerFactory } from "kw-logging";
+
+const logger = LoggerFactory.getLogger();
 
 abstract class DBSeed {
 	abstract getPatchLevel(): Promise<number>;
@@ -13,24 +17,34 @@ abstract class DBSeed {
 		sqlSource: string,
 		isFile: boolean
 	): Promise<boolean> {
-		if ((await this.getPatchLevel()) < patchLevel) {
-			const sqlText = isFile ? this.getSqlText(sqlSource) : sqlSource;
+		try {
+			if ((await this.getPatchLevel()) < patchLevel) {
+				const sqlText = isFile
+					? await this.getSqlText(sqlSource)
+					: sqlSource;
 
-			await this.executeSqlText(dataSource, sqlText);
-			await this.setPatchLevel(patchLevel);
+				await this.executeSqlText(dataSource, sqlText);
+				await this.setPatchLevel(patchLevel);
+			}
+		} catch (err) {
+			logger.error(err);
 		}
 
 		return true;
 	}
 
-	private getSqlText(file: string) {
-		const sqlText = fs.readFileSync(file, { encoding: "utf-8" });
+	private async getSqlText(file: string) {
+		const sqlText = await fs.promises.readFile(file, { encoding: "utf-8" });
 
 		return sqlText;
 	}
 
 	private async executeSqlText(dataSource: DataSource, sqlText: string) {
-		await dataSource.query(sqlText);
+		try {
+			await dataSource.query(sqlText);
+		} catch (err) {
+			logger.error(err);
+		}
 	}
 }
 

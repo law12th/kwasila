@@ -3,7 +3,6 @@ import { Request, Response } from "express";
 import JWT from "jsonwebtoken";
 import { HttpStatusCodes } from "kw-constants";
 import { LoggerFactory } from "kw-logging";
-import { BadRequestError } from "kw-utils";
 import { config } from "../config";
 import dataSource from "../config/db-config";
 import { Customer } from "../entities";
@@ -71,6 +70,8 @@ const addNewCustomer = async (options: RegistrationCredentials) => {
 	newCustomer.givenName = options.givenName;
 	newCustomer.familyName = options.familyName;
 	newCustomer.username = options.username;
+	newCustomer.gender = options.gender;
+	newCustomer.dateOfBirth = options.dateOfBirth;
 	newCustomer.password = await Password.toHash(options.password);
 	newCustomer.phone = options.phone;
 	newCustomer.email = options.email;
@@ -91,7 +92,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
 			res.status(HttpStatusCodes.STATUS200OK).json({ jwt });
 		} else {
-			throw new BadRequestError("invalid credentials");
+			res.status(HttpStatusCodes.STATUS400BAD_REQUEST).json({
+				error: "invalid credentials",
+			});
 		}
 	} catch (err) {
 		logger.error(err);
@@ -112,11 +115,15 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
 	try {
 		if (await isUsernameTaken(username)) {
-			throw new BadRequestError("username already exists");
+			res.status(HttpStatusCodes.STATUS400BAD_REQUEST).json({
+				error: "username already exists",
+			});
 		}
 
 		if (await isEmailTaken(email)) {
-			throw new BadRequestError("email already exists");
+			res.status(HttpStatusCodes.STATUS400BAD_REQUEST).json({
+				error: "email already exists",
+			});
 		}
 
 		await addNewCustomer({
@@ -136,7 +143,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 			jwt,
 		};
 
-		res.status(HttpStatusCodes.STATUS200OK).send("account created");
+		res.status(HttpStatusCodes.STATUS200OK).json("account created");
 	} catch (err) {
 		logger.error(err);
 	}
