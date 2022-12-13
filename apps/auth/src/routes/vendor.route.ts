@@ -13,5 +13,6 @@ vendorRouter
 	.post(registrationRules(), validateRequest, register);
 vendorRouter.route("/vendor/login").post(loginRules(), validateRequest, login);
 vendorRouter.route("/vendor/logout").post(logout);
+vendorRouter.route("/vendor/:vendorId").get();
 
 export default vendorRouter;

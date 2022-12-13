@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Request, Response } from "express";
@@ -106,18 +107,18 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 	}
 };
 
-export const register = async (req: Request, res: Response): Promise<void> => {
+export const register = async (req: Request, res: Response) => {
 	const { vendor_name, email, address, phone_1, phone_2, password } = req.body;
 
 	try {
 		if (await isVendorNameTaken(vendor_name)) {
-			res.status(HttpStatusCodes.STATUS400BAD_REQUEST).json({
+			return res.status(HttpStatusCodes.STATUS400BAD_REQUEST).json({
 				error: "vendor name already exists",
 			});
 		}
 
 		if (await isEmailTaken(email)) {
-			res.status(HttpStatusCodes.STATUS400BAD_REQUEST).json({
+			return res.status(HttpStatusCodes.STATUS400BAD_REQUEST).json({
 				error: "email already exists",
 			});
 		}

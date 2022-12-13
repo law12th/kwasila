@@ -1,0 +1,9 @@
+export { default as AboutPage } from "./About-page";
+export { default as ContactPage } from "./Contact-page";
+export { default as ErrorPage } from "./Error-page";
+export { default as LandingPage } from "./Landing-page";
+export { default as LicensingPage } from "./Licensing-page";
+export { default as Page } from "./Page";
+export { default as PricingPage } from "./Pricing-page";
+export { default as PrivacyPolicyPage } from "./Privacy-policy-page";
+export { default as ServicesPage } from "./Services-page";

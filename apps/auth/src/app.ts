@@ -21,6 +21,7 @@ app.use(
 	cookieSession({
 		signed: false,
 		secure: false,
+		httpOnly: true,
 	})
 );
 

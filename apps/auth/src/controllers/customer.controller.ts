@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Request, Response } from "express";
 import JWT from "jsonwebtoken";
@@ -11,7 +12,9 @@ import { Password } from "../services";
 
 const logger = LoggerFactory.getLogger();
 
-const isUsernameTaken = async (username: string): Promise<boolean> => {
+const determineIfUsernameIsTaken = async (
+	username: string
+): Promise<boolean> => {
 	const customerRepository = dataSource.getRepository(Customer);
 
 	const customer = await customerRepository.findOneBy({ username });
@@ -23,19 +26,19 @@ const isUsernameTaken = async (username: string): Promise<boolean> => {
 	return false;
 };
 
-const isEmailTaken = async (email: string): Promise<boolean> => {
+const determineIfEmailIsTaken = async (email: string): Promise<boolean> => {
 	const customerRepository = dataSource.getRepository(Customer);
 
 	const customer = await customerRepository.findOneBy({ email });
 
-	if (customer) {
-		return true;
+	if (!customer) {
+		return false;
 	}
 
-	return false;
+	return true;
 };
 
-const isValidCustomer = async (
+const determineIfCustomerLoginCredentialsAreValid = async (
 	email: string,
 	password: string
 ): Promise<boolean> => {
@@ -83,25 +86,29 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 	const { email, password } = req.body;
 
 	try {
-		if (await isValidCustomer(email, password)) {
-			const jwt = generateJWTToken({ email });
+		const isValidCustomer = await determineIfCustomerLoginCredentialsAreValid(
+			email,
+			password
+		);
 
-			req.session = {
-				jwt,
-			};
-
-			res.status(HttpStatusCodes.STATUS200OK).json({ jwt });
-		} else {
+		if (!isValidCustomer) {
 			res.status(HttpStatusCodes.STATUS400BAD_REQUEST).json({
 				error: "invalid credentials",
 			});
 		}
+		const jwt = generateJWTToken({ email });
+
+		req.session = {
+			jwt,
+		};
+
+		res.status(HttpStatusCodes.STATUS200OK).json({ jwt });
 	} catch (err) {
 		logger.error(err);
 	}
 };
 
-export const register = async (req: Request, res: Response): Promise<void> => {
+export const register = async (req: Request, res: Response) => {
 	const {
 		given_name,
 		family_name,
@@ -114,14 +121,18 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 	} = req.body;
 
 	try {
-		if (await isUsernameTaken(username)) {
-			res.status(HttpStatusCodes.STATUS400BAD_REQUEST).json({
+		const isUsernameTaken = await determineIfUsernameIsTaken(username);
+
+		if (isUsernameTaken) {
+			return res.status(HttpStatusCodes.STATUS400BAD_REQUEST).json({
 				error: "username already exists",
 			});
 		}
 
-		if (await isEmailTaken(email)) {
-			res.status(HttpStatusCodes.STATUS400BAD_REQUEST).json({
+		const isEmailTaken = await determineIfEmailIsTaken(email);
+
+		if (isEmailTaken) {
+			return res.status(HttpStatusCodes.STATUS400BAD_REQUEST).json({
 				error: "email already exists",
 			});
 		}

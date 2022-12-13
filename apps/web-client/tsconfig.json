@@ -1,0 +1,15 @@
+{
+	"extends": "tsconfig/vitejs.json",
+	"include": ["**/*.ts", "**/*.tsx"],
+	"exclude": ["node_modules", "build", ".turbo", "coverage"],
+	"references": [{ "path": "./tsconfig.node.json" }],
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"]
+		},
+		"target": "es6",
+		"outDir": "./build",
+		"module": "commonjs"
+	}
+}

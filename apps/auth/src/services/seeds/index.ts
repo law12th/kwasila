@@ -19,7 +19,7 @@ const runSeeds = async (dataSource: DataSource) => {
 		"patch",
 	]);
 
-	if (!patchTable.exists) {
+	if (!patchTable[0].exists) {
 		try {
 			const patchSql = await fs.promises.readFile(
 				path.join(__dirname, "../../assets/sql/tables/patch.1.sql"),

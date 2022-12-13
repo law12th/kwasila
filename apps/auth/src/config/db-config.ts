@@ -15,6 +15,7 @@ const dataSource = new DataSource({
 	password: config.DB_PASSWORD,
 	database: config.DB_NAME,
 	entities: [Customer, Vendor, Patch],
+	migrations: ["../migrations/**/*.ts"],
 });
 
 (async () => {
