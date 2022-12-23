@@ -10,8 +10,10 @@
 		"src/**/*.test.ts"
 	],
 	"compilerOptions": {
-		"target": "es6",
 		"outDir": "./build",
-		"module": "commonjs"
+		"baseUrl": "./",
+		"paths": {
+			"@/*": ["./src/*"]
+		}
 	}
 }

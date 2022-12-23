@@ -4,6 +4,8 @@
 	"extends": "./base.json",
 	"compilerOptions": {
 		"noEmit": false,
-		"sourceMap": true
+		"sourceMap": true,
+		"module": "commonjs",
+		"target": "es2017"
 	}
 }

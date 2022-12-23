@@ -1,0 +1,43 @@
+{
+	"name": "auth",
+	"version": "1.0.0",
+	"license": "MIT",
+	"main": "./build/main.js",
+	"types": "./build/main.d.ts",
+	"scripts": {
+		"prebuild": "del ./build/*",
+		"build": "nest build",
+		"start:dev": "pm2-dev ./build/index.js",
+		"start:local": "nest start",
+		"start:prod": "pm2-runtime ./build/index.js",
+		"lint": "eslint src",
+		"lint:fix": "eslint src --fix",
+		"test": "jest --watchAll --no-cache",
+		"test:ci": "jest"
+	},
+	"devDependencies": {
+		"@types/passport-google-oauth20": "^2.0.11",
+		"@types/passport-jwt": "^3.0.7",
+		"eslint-config-custom": "*",
+		"prisma": "^4.7.1",
+		"test-config-custom": "*",
+		"tsconfig": "*"
+	},
+	"dependencies": {
+		"@nestjs/common": "^9.2.1",
+		"@nestjs/config": "^2.2.0",
+		"@nestjs/core": "^9.2.1",
+		"@nestjs/jwt": "^9.0.0",
+		"@nestjs/passport": "^9.0.0",
+		"@prisma/client": "^4.7.1",
+		"argon2": "^0.30.2",
+		"class-transformer": "^0.5.1",
+		"class-validator": "^0.14.0",
+		"kw-logging": "*",
+		"passport": "^0.6.0",
+		"passport-google-oauth20": "^2.0.0",
+		"passport-jwt": "^4.0.0",
+		"reflect-metadata": "^0.1.13",
+		"rxjs": "^7.6.0"
+	}
+}

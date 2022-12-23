@@ -1,14 +1,13 @@
 import { DATE_FORMAT } from "kw-constants";
-import TransportTypes from "../transport-types";
 import { Transport } from "../transports";
 
 const transportsConfig: Transport[] = [
 	{
-		type: TransportTypes.CONSOLE,
+		type: "CONSOLE",
 		options: {},
 	},
 	{
-		type: TransportTypes.FILE,
+		type: "FILE",
 		options: {
 			filename: "all-%DATE%.log",
 			dirname: "./.logs",
@@ -17,7 +16,7 @@ const transportsConfig: Transport[] = [
 		},
 	},
 	{
-		type: TransportTypes.FILE,
+		type: "FILE",
 		options: {
 			filename: "error-%DATE%.log",
 			dirname: "./.logs",
